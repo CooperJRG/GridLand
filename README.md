@@ -44,7 +44,3 @@ The agent is implemented from scratch, providing a detailed example of how to im
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a pull request.
-
-## License
-
-This project is licensed under the terms of the MIT license.
