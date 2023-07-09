@@ -27,7 +27,7 @@ The project is structured as follows:
 ## Running the Project
 
 To run the project, execute the main.py script:
-'python main.py'
+`python main.py`
 
 This will start the game loop, where the agent will interact with the GridLand environment. The agent's actions and the environment's responses will be visualized in a PyQt5 window.
 
