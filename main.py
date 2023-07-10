@@ -1,8 +1,9 @@
 import copy
 import sys
 import torch
-from PyQt5 import QtWidgets, QtCore
+import matplotlib.pyplot as plt
 
+from PyQt5 import QtWidgets, QtCore
 from PPO.PPO import PPO
 from PPO.dual_network import DualNetwork
 from PPO.memory import Memory
@@ -10,9 +11,9 @@ from enviroment.grid_land import GridLand
 from visualize.grid_window import GridWindow
 
 
-def main():
+def main(step_max=300, repeat_parameter=1, randomLevels=False, enableDeath=False):
     # Create an instance of GridLand environment
-    env = GridLand()
+    env = GridLand(repeat_parameter, randomLevels, enableDeath)
 
     # Mapping of integers to actions
     int_to_action_mapping = ['Up', 'Left', 'Down', 'Right']
@@ -25,18 +26,18 @@ def main():
     device = torch.device(device)
 
     # Define the network architecture parameters
-    layers = [256, 128, 128, 64]
-    cnn_layers = [32, 64, 64, 128]
-    kernal = [(1, 1), (1, 1), (2, 2), (2, 2)]
-    stride = [(1, 1), (1, 1), (1, 1), (1, 1)]
+    cnn_layers = [32, 64, 128, 256, 256]
+    layers = [512, 256, 128, 64]
+    kernel = [(3, 3), (3, 3), (3, 3), (2, 2), (2, 2)]
+    stride = [(1, 1), (1, 1), (1, 1), (1, 1), (1, 1)]
 
     # Initialize DualNetwork for policy and value estimation
     net = DualNetwork(input_dim=tuple(state.shape), device=device, use_cnn=True, layers=layers, cnn_layers=cnn_layers,
-                      kernel_sizes=kernal, strides=stride, num_actions=len(env.possible_actions))
+                      kernel_sizes=kernel, strides=stride, num_actions=len(env.possible_actions))
 
     # Initialize PPO for policy optimization
-    ppo = PPO(net, lr=0.0003, eps_clip=0.22,
-              value_coef=0.5, entropy_coef=0.05, gamma=0.99, gae_lambda=0.96)
+    ppo = PPO(net, lr=0.0002, eps_clip=0.2,
+              value_coef=0.5, entropy_coef=0.018, gamma=0.995, gae_lambda=0.96)
 
     # Initialize memory for storing transitions
     memory = Memory(device)
@@ -48,11 +49,11 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     window = GridWindow(env.grid)
     window.show()
+    count = 0
 
     # Main loop
     while True:
-        count = 1
-        while not env.done and count < 300:
+        while not env.done and count < step_max:
             # Determine the action using PPO
             action_tensor, logprob, value = ppo.select_action(state)
             action_name = int_to_action_mapping[action_tensor.item()]
@@ -101,8 +102,33 @@ def main():
             ppo.update(memory, 10, 32)
             num_simulations += 1
 
+        count = 0
+
     sys.exit(app.exec_())
 
 
 if __name__ == "__main__":
-    main()
+    # Retrieve the 'limiter', 'complete_count', 'randomLevels', and 'enableDeath' parameters from the command-line
+    # arguments if provided
+    if len(sys.argv) >= 2:
+        limiter = int(sys.argv[1])
+    else:
+        limiter = 300  # Default value of 300
+
+    if len(sys.argv) >= 3:
+        complete_count = int(sys.argv[2])
+    else:
+        complete_count = 1  # Default value of 1
+
+    if len(sys.argv) >= 4:
+        random_levels = sys.argv[3].lower() == 'true'
+    else:
+        random_levels = False  # Default value of False
+
+    if len(sys.argv) >= 5:
+        enable_death = sys.argv[4].lower() == 'true'
+    else:
+        enable_death = False  # Default value of False
+
+    # Call the 'main' function with the provided or default parameter values
+    main(limiter, complete_count, random_levels, enable_death)

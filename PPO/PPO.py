@@ -3,7 +3,7 @@ import torch
 
 
 class PPO:
-    def __init__(self, dual_network, optimizer=None, lr=0.0003, eps_clip=0.2,
+    def __init__(self, dual_network, optimizer=None, lr=0.0001, eps_clip=0.2,
                  value_coef=0.5, entropy_coef=0.01, gamma=0.99, gae_lambda=0.95):
         """
         Initialize the PPO Agent.

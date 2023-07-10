@@ -8,15 +8,6 @@ class GridLand:
     """
     A class to represent a grid land in the environment.
 
-    ...
-
-    Attributes
-    ----------
-    cell_size : int
-        size of each cell in the grid (default 90)
-    border : int
-        size of the border around the grid (default 50)
-    ...
 
     Methods
     -------
@@ -40,7 +31,7 @@ class GridLand:
         Generates the current state of the grid
     """
 
-    def __init__(self, cell_size=90, border=50):
+    def __init__(self, complete_count, randomLevels=False, death=False):
         self.agent_was_moving = False
 
         # Defining the various cell types
@@ -67,24 +58,24 @@ class GridLand:
         # Defining the weights (rewards) for each action
         self.weights = {
             'Collision': -0.5,
-            'Button Press': 0.7,
+            'Button Press': 0.8,
             'Reach End': 1,
-            'Distance': 0.2,  # Positive if it gets closer, Negative if it gets farther
-            'Survival': 0.001  # Slightly positive reward for staying alive
+            'Distance': 0.3,  # Positive if it gets closer, Negative if it gets farther
         }
 
-        self.cell_size = cell_size
-        self.border = border
+        self.randomLevels = randomLevels
         self.level_manager = LevelManager()
+        if randomLevels:
+            self.level_manager.next_bland_level()
         self.grid = self.level_manager.current_level
         self.start_position = self.level_manager.start_position
         self.end_position = self.level_manager.end_position
         self.agent = Agent(*self.start_position)
-        self.agent_position = (
-            border + self.agent.x * cell_size + cell_size / 2, border + self.agent.y * cell_size + cell_size / 2)
         self.button_down = False
         self.done = False
-        self.steps_survived = 0
+        self.death = death
+        self.complete_count = complete_count
+        self.num_beat = 0
 
     def agent_cell(self):
         """Return the cell occupied by the agent."""
@@ -93,7 +84,12 @@ class GridLand:
     def is_goal_reached(self):
         """Check if the agent has reached the goal and perform necessary operations."""
         if self.agent_cell() == self.cells['Goal']:
-            self.level_manager.next_level()
+            self.num_beat += 1
+            if self.num_beat % self.complete_count == 0:
+                if not self.randomLevels:
+                    self.level_manager.next_level()
+                else:
+                    self.level_manager.next_bland_level()
             self.start_position = self.level_manager.start_position
             self.end_position = self.level_manager.end_position
             self.agent = Agent(*self.start_position)
@@ -117,18 +113,10 @@ class GridLand:
         collision_reward = self.collision_detection()
         if collision_reward != 0:
             reward += collision_reward
-            self.steps_survived = 0
         else:
             reward += self.distance_calculator()
             reward += self.was_button_pressed()
-            goal_reached_reward = self.is_goal_reached()
-            if goal_reached_reward != 0:
-                reward += goal_reached_reward
-                self.steps_survived = 0
-            else:
-                self.steps_survived += 1
-                survival_reward = self.weights['Survival'] * 0.99 ** self.steps_survived
-                reward += survival_reward
+            reward += self.is_goal_reached()
         state = self.generate_state()
         return state, reward
 
@@ -138,23 +126,16 @@ class GridLand:
         self.agent.x = self.start_position[0]
         self.agent.y = self.start_position[1]
         self.agent.previous = (self.agent.x, self.agent.y)
-        self.level_manager.restart_level()
+        self.level_manager.restart_level(self.randomLevels)
         self.button_down = False
-        self.steps_survived = 0
 
     def collision_detection(self):
         """Check if the agent has collided with an obstacle and perform necessary operations."""
         if self.agent.out_of_bounds(self.grid) or self.agent_cell() in [self.cells['Wall'],
                                                                         self.cells['Electricity'],
                                                                         self.cells['Car'], self.cells['Fan']]:
-            '''
-            self.done = True
-            self.agent.x = self.start_position[0]
-            self.agent.y = self.start_position[1]
-            self.agent.previous = (self.agent.x, self.agent.y)
-            self.level_manager.restart_level()
-            self.button_down = False
-            '''
+            if self.death:
+                self.reset_game()
             self.agent.x = self.agent.previous[0]
             self.agent.y = self.agent.previous[1]
             return self.weights['Collision']
@@ -186,14 +167,13 @@ class GridLand:
         """Generate the current state of the grid."""
         state = copy.deepcopy(self.grid)
         state[self.agent.y][self.agent.x] = self.cells['Agent']
+        num_cell_types = len(self.cells)
 
-        # Convert state to tensor
-        state = torch.tensor(state, dtype=torch.float32)
+        # Initialize a new state tensor with dimensions for each cell type
+        state_tensor = torch.zeros((num_cell_types, len(state), len(state[0])), dtype=torch.float32)
 
-        # Normalize the values
-        state /= float(self.cells['Agent'])  # Normalize between 0 and 1
+        for i, cell_type in enumerate(self.cells.values()):
+            state_tensor[i] = torch.tensor(state == cell_type, dtype=torch.float32)
 
-        state = state.unsqueeze(0)  # Add channel dimension at index 0
-
-        return state
+        return state_tensor
 

@@ -1,16 +1,21 @@
-class LevelManager:
-    """Manages levels for the game, translates them into in-game objects.
+import random
 
-        Attributes: translate_dict (dict): A dictionary used to translate different characters into in-game object
-        representations.
-        levels (dict): A dictionary containing all the game levels represented as 2D lists.
-        level_names (list): A list containing names of all the levels in the game.
-        name_index (int): An integer counter used to iterate over level_names.
-        start_position (tuple): An tuple of two integers, (x,y), representing the start position.
-        end_position (tuple): An tuple of two integers, (x,y), representing the end position.
-        fan_spins (list): A list used to store fan spins.
-        car_spawners (list): A list used to store car spawners.
-        fan_patterns (dict): A dictionary used to store patterns of fans.
+
+class LevelManager:
+    """
+    Manages levels for the game, translates them into in-game objects.
+
+    Attributes: translate_dict (dict): A dictionary used to translate different characters into in-game object
+    representations.
+
+    levels (dict): A dictionary containing all the game levels represented as 2D lists.
+    level_names (list): A list containing names of all the levels in the game.
+    name_index (int): An integer counter used to iterate over level_names.
+    start_position (tuple): An tuple of two integers, (x,y), representing the start position.
+    end_position (tuple): An tuple of two integers, (x,y), representing the end position.
+    fan_spins (list): A list used to store fan spins.
+    car_spawners (list): A list used to store car spawners.
+    fan_patterns (dict): A dictionary used to store patterns of fans.
     """
 
     def __init__(self):
@@ -36,7 +41,7 @@ class LevelManager:
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 'g', 0, 0, 0, 's', 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 'g', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 's', 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -54,26 +59,26 @@ class LevelManager:
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             ],
             'Blandest Land': [
-                [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-                [1, 0, 'g', 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-                [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 's', 0, 1, 0],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+                [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 0, 'g', 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 's', 0, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
             ],
             'Flappy Bird': [
-                [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
                 [0, 'g', 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 's', 0],
                 [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
             ],
             'Frogger': [
                 [0, 0, 0, 0, 'v=3', 0, 0, 'v=2', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -160,8 +165,8 @@ class LevelManager:
                 ],
             ]
         }
-        self.beat_count = 0
-        self.current_level = self.translate_level()
+        template = self.levels[self.level_names[self.name_index]]
+        self.current_level = self.translate_level(template)
         self.draw_fans()
 
     def next_level(self):
@@ -169,18 +174,38 @@ class LevelManager:
         This function is used to load the next level in the sequence. It resets some properties of the class,
         generates the new level from the translated template, and draws the fans for this level.
         """
-        self.beat_count += 1
-        if self.beat_count % 8 == 0:
-            self.name_index += 1
-            if self.name_index == len(self.level_names):
-                self.name_index = 0
-            self.fan_spins = []
-            self.car_spawners = []
-            self.current_level = self.translate_level()
-            self.draw_fans()
-            self.draw_spawners()
-        else:
-            self.restart_level()
+        self.name_index += 1
+        if self.name_index == len(self.level_names):
+            self.name_index = 0
+        self.fan_spins = []
+        self.car_spawners = []
+        template = self.levels[self.level_names[self.name_index]]
+        self.current_level = self.translate_level(template)
+        self.draw_fans()
+        self.draw_spawners()
+
+    def next_bland_level(self, height=9, width=20):
+        """
+        This function generates a new random bland level of a specified size (default is height of 9, width of 20),
+        with a start and goal cell, all else being empty.
+        """
+        # Generate an empty level
+        level = [[0] * width for _ in range(height)]
+
+        # Randomly decide the start and goal cells
+        start_x, start_y = int(random.randint(0, width - 1)), int(random.randint(0, height - 1))
+        goal_x, goal_y = start_x, start_y
+        while goal_x == start_x and goal_y == start_y:
+            goal_x, goal_y = random.randint(0, width - 1), random.randint(0, height - 1)
+
+        # Set the start and goal cells
+        level[start_y][start_x] = 's'
+        level[goal_y][goal_x] = 'g'
+
+        # Translate the level
+        self.fan_spins = []
+        self.car_spawners = []
+        self.current_level = self.translate_level(level)
 
     def update_level(self):
         """
@@ -189,14 +214,16 @@ class LevelManager:
         self.draw_fans()
         self.draw_spawners()
 
-    def restart_level(self):
+    def restart_level(self, randomLevels):
         """
         This function is used to reset the level. It resets some properties of the class,
         generates the new level from the translated template, and draws the fans for this level.
         """
         self.fan_spins = []
         self.car_spawners = []
-        self.current_level = self.translate_level()
+        if not randomLevels:
+            template = self.levels[self.level_names[self.name_index]]
+            self.current_level = self.translate_level(template)
         self.draw_fans()
 
     def button_pressed(self):
@@ -210,14 +237,13 @@ class LevelManager:
                 if cell == 4:
                     self.current_level[i][j] = 0
 
-    def translate_level(self):
+    def translate_level(self, template):
         """
         This function translates the current level template using the translation dictionary.
         It also identifies complex cells that require further handling (fans and car spawners),
         updating the fan_spins and car_spawners lists accordingly.
         Returns a 2D list of integers representing the translated level.
         """
-        template = self.levels[self.level_names[self.name_index]]
         result = []
         complicated_cells = []
         for i, row in enumerate(template):
