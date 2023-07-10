@@ -37,3 +37,18 @@ To run the project, execute the `main.py` script:
 
 ```bash
 python main.py
+```
+This will start the game loop, where the agent will interact with the GridLand environment. The agent's actions and the environment's responses will be visualized in a PyQt5 window.
+
+## Project Structure
+
+The agent is trained using the Proximal Policy Optimization (PPO) algorithm, a policy gradient method for reinforcement learning. PPO uses a dual network architecture for policy and value estimation. The policy network outputs a distribution over actions given a state, and the value network estimates the expected return given a state.
+
+The PPO agent interacts with the environment by selecting actions based on the current policy, executing these actions in the environment, and storing the resulting state transitions in a memory buffer. The agent then uses these accumulated experiences to update the parameters of the policy and value networks.
+
+The PPO update step involves calculating the returns from the stored rewards and value estimates using Generalized Advantage Estimation (GAE), and then optimizing the policy and value networks based on these returns and the old policy. The policy update is clipped to prevent significant policy updates, and an entropy bonus is included in the loss function to encourage exploration.
+
+The agent is implemented from scratch, providing a detailed example of implementing the PPO algorithm in PyTorch.
+
+## Contributing
+Contributions are welcome! Please feel free to submit a pull request.
