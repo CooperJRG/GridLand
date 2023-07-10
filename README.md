@@ -55,7 +55,19 @@ The script will run with the default values if no parameters are provided. This 
 
 This will start the game loop, where the agent will interact with the GridLand environment. The agent's actions and the environment's responses will be visualized in a PyQt5 window.
 
-## Project Structure
+## Implementation Details
+
+![Training Progress on a Random Level](https://github.com/CooperJRG/GridLand/blob/main/Training_Progress.png)
+
+The graph above represents the training progress of the agent over time. The x-axis signifies the training iterations, while the y-axis represents the average reward. 
+
+The agent explores the environment at the beginning of training, and the rewards are relatively low and quite variable. This is the "exploration" phase of reinforcement learning, where the agent learns about the environment and tries different actions to see their effects. This phase is often characterized by high variance in reward, reflected by the noise in the graph, as the agent's decisions are initially more random.
+
+As the agent learns from its interactions with the environment, it starts to understand the game's dynamics better, and its performance begins to improve. This is demonstrated by the increasing trend in the rewards over the training iterations.
+
+Towards the end of the training, the reward peaks, showing that the agent has learned an effective policy to maximize its reward. However, there is still some variation in the reward, which signifies that the agent continues to explore the environment to find potentially better strategies.
+
+This balancing act between exploration (trying out new, potentially better policies) and exploitation (sticking to the known best policy) is a fundamental challenge in reinforcement learning. The noise in the graph illustrates the agent's continual exploration of the environment, while the overall trend of increasing reward shows successful learning.
 
 The agent is trained using the Proximal Policy Optimization (PPO) algorithm, a policy gradient method for reinforcement learning. PPO uses a dual network architecture for policy and value estimation. The policy network outputs a distribution over actions given a state, and the value network estimates the expected return given a state.
 
