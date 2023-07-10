@@ -1,6 +1,6 @@
 # GridLand
 
-![GridLand Game in Progress](INSERT_GIF_HERE)
+![GridLand Game in Progress](https://github.com/CooperJRG/GridLand/blob/main/gridland_gif.gif)
 
 This repository contains the implementation of a grid-based environment game, GridLand, using PyTorch, PyQt5, and Numpy. The agent learns to navigate the grid using Proximal Policy Optimization (PPO), a reinforcement learning algorithm.
 
