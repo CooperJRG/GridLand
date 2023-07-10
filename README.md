@@ -33,11 +33,26 @@ The project is structured as follows:
 
 ## Running the Project
 
-To run the project, execute the `main.py` script:
+To run the project, execute the `main.py` script. The script can be run with the following optional parameters:
+
+1. `limiter` - (default: 300) An integer that controls the maximum number of steps per simulation.
+2. `complete_count` - (default: 1) An integer that specifies the number of times an agent should complete a level.
+3. `random_levels` - (default: False) A boolean flag indicating whether the levels should be randomly selected.
+4. `enable_death` - (default: False) A boolean flag indicating whether to enable the death mechanism in the game.
+
+The script is run with the following format:
 
 ```bash
-python main.py
+python main.py [limiter] [complete_count] [random_levels] [enable_death]
 ```
+
+For example, to run the script with a limiter of 500, a complete count of 2, random levels enabled, and death enabled, you would use the following command:
+
+```bash
+python main.py 500 2 true true
+```
+The script will run with the default values if no parameters are provided. This will start the game loop, where the agent will interact with the GridLand environment. The agent's actions and the environment's responses will be visualized in a PyQt5 window.
+
 This will start the game loop, where the agent will interact with the GridLand environment. The agent's actions and the environment's responses will be visualized in a PyQt5 window.
 
 ## Project Structure
